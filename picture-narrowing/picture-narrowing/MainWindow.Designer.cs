@@ -1,6 +1,6 @@
 ﻿namespace picture_narrowing
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,27 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
+            this.ImageViewer = new System.Windows.Forms.PictureBox();
             this.RemainingImages = new System.Windows.Forms.Label();
             this.KeepButton = new System.Windows.Forms.Button();
             this.TossButton = new System.Windows.Forms.Button();
             this.SkipButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // ImageViewer
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.ImageViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(15, 15);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(594, 382);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.ImageViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ImageViewer.Location = new System.Drawing.Point(15, 15);
+            this.ImageViewer.Margin = new System.Windows.Forms.Padding(0);
+            this.ImageViewer.Name = "ImageViewer";
+            this.ImageViewer.Size = new System.Drawing.Size(594, 382);
+            this.ImageViewer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.ImageViewer.TabIndex = 0;
+            this.ImageViewer.TabStop = false;
             // 
             // RemainingImages
             // 
@@ -69,6 +71,7 @@
             this.KeepButton.TabIndex = 2;
             this.KeepButton.Text = "Keep";
             this.KeepButton.UseVisualStyleBackColor = true;
+            this.KeepButton.Click += new System.EventHandler(this.KeepButton_Click);
             // 
             // TossButton
             // 
@@ -79,6 +82,7 @@
             this.TossButton.TabIndex = 3;
             this.TossButton.Text = "Toss";
             this.TossButton.UseVisualStyleBackColor = true;
+            this.TossButton.Click += new System.EventHandler(this.TossButton_Click);
             // 
             // SkipButton
             // 
@@ -89,8 +93,15 @@
             this.SkipButton.TabIndex = 4;
             this.SkipButton.Text = "Skip";
             this.SkipButton.UseVisualStyleBackColor = true;
+            this.SkipButton.Click += new System.EventHandler(this.SkipButton_Click);
             // 
-            // Form1
+            // FolderDialog
+            // 
+            this.FolderDialog.Description = "Select a directory with images in it.";
+            this.FolderDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            this.FolderDialog.ShowNewFolderButton = false;
+            // 
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -99,23 +110,27 @@
             this.Controls.Add(this.TossButton);
             this.Controls.Add(this.KeepButton);
             this.Controls.Add(this.RemainingImages);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.ImageViewer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(640, 480);
-            this.Name = "Form1";
+            this.Name = "MainWindow";
             this.Text = "Picture Narrowing";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
+            this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MainWindow_KeyPress);
+            ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox ImageViewer;
         private System.Windows.Forms.Label RemainingImages;
         private System.Windows.Forms.Button KeepButton;
         private System.Windows.Forms.Button TossButton;
         private System.Windows.Forms.Button SkipButton;
+        private System.Windows.Forms.FolderBrowserDialog FolderDialog;
     }
 }
 
