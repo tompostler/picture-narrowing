@@ -46,6 +46,9 @@
             _toDelete.Add(image);
         }
 
+        /// <summary>
+        /// Run through and delete all the files scheduled for deletion.
+        /// </summary>
         public void DeleteFiles()
         {
             foreach (FileInfo info in _toDelete)
