@@ -35,6 +35,7 @@
             this.TossButton = new System.Windows.Forms.Button();
             this.SkipButton = new System.Windows.Forms.Button();
             this.FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.Filename = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -101,11 +102,23 @@
             this.FolderDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
             this.FolderDialog.ShowNewFolderButton = false;
             // 
+            // Filename
+            // 
+            this.Filename.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Filename.Location = new System.Drawing.Point(361, 407);
+            this.Filename.Name = "Filename";
+            this.Filename.Size = new System.Drawing.Size(248, 25);
+            this.Filename.TabIndex = 5;
+            this.Filename.Text = "Filename";
+            this.Filename.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 441);
+            this.Controls.Add(this.Filename);
             this.Controls.Add(this.SkipButton);
             this.Controls.Add(this.TossButton);
             this.Controls.Add(this.KeepButton);
@@ -131,6 +144,7 @@
         private System.Windows.Forms.Button TossButton;
         private System.Windows.Forms.Button SkipButton;
         private System.Windows.Forms.FolderBrowserDialog FolderDialog;
+        private System.Windows.Forms.Label Filename;
     }
 }
 

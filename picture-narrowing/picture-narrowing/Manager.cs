@@ -64,8 +64,9 @@
         private void trimOutNonimages()
         {
             List<FileInfo> actuallyImages = new List<FileInfo>();
-            foreach (FileInfo info in _images)
+            for (int i = 0; i < _images.Count; i++)
             {
+                FileInfo info = _images[i];
                 try
                 {
                     Image.FromFile(info.FullName);
@@ -75,6 +76,11 @@
                     continue;
                 }
                 actuallyImages.Add(info);
+
+                // We're creating a lot of large objects and discarding them quickly
+                // So force a GC.Collect every 25 images since the garbage collector doesn't keep up
+                if (i % 25 == 0)
+                    GC.Collect();
             }
             _images = actuallyImages;
             _toDelete = new List<FileInfo>(_images.Count);

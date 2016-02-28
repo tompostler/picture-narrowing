@@ -2,14 +2,13 @@
 {
     using System;
     using System.IO;
+    using System.Threading;
     using System.Windows.Forms;
 
     public partial class MainWindow : Form
     {
         private Manager manager;
         private FileInfo image;
-        // TODO FIX
-        private string randomImageToReopenAtEnd;
 
         public MainWindow()
         {
@@ -18,20 +17,12 @@
 
         private void KeepButton_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(randomImageToReopenAtEnd))
-            {
-                randomImageToReopenAtEnd = Path.Combine(new string[] { image.DirectoryName, "keep", image.Name });
-            }
             image.CopyTo(Path.Combine(new string[] { image.DirectoryName, "keep", image.Name }));
             nextImage();
         }
 
         private void TossButton_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(randomImageToReopenAtEnd))
-            {
-                randomImageToReopenAtEnd = Path.Combine(new string[] { image.DirectoryName, "toss", image.Name });
-            }
             image.CopyTo(Path.Combine(new string[] { image.DirectoryName, "toss", image.Name }));
             nextImage();
         }
@@ -88,7 +79,7 @@
         }
 
         /// <summary>
-        /// Remove the current image from the manager and server up the next one with updated text.
+        /// Remove the current image from the manager and serve up the next one with updated text.
         /// </summary>
         /// <param name="removeImage">True to remove the image from the manager, false to keep in the queue.</param>
         private void nextImage(bool removeImage = true)
@@ -96,13 +87,12 @@
             if (removeImage)
             {
                 manager.RemoveImage(image);
-                updateRemainingLabel();
+                updateImageLabels();
             }
 
             // Check for end
             if (manager.ImagesRemaining == 0)
             {
-                ImageViewer.Load(randomImageToReopenAtEnd);
                 Close();
             }
             else
@@ -110,16 +100,17 @@
                 // Show the next image
                 image = manager.RandomImage;
                 ImageViewer.Load(image.FullName);
-                updateRemainingLabel();
+                updateImageLabels();
             }
         }
 
         /// <summary>
-        /// Updates the remaining images text based on the count in the manager.
+        /// Updates the remaining images text and current filename text.
         /// </summary>
-        private void updateRemainingLabel()
+        private void updateImageLabels()
         {
             RemainingImages.Text = $"{manager.ImagesRemaining - 1} Remaining...";
+            Filename.Text = image.Name;
         }
 
         /// <summary>
@@ -129,6 +120,8 @@
         /// <param name="e"></param>
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
+            ImageViewer.Dispose();
+            Thread.Sleep(100); // Make sure the image viewer is disposed.
             manager.DeleteFiles();
         }
     }
