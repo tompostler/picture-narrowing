@@ -84,6 +84,9 @@
             }
             _images = actuallyImages;
             _toDelete = new List<FileInfo>(_images.Count);
+
+            // And one more for the remainder
+            GC.Collect();
         }
     }
 }

@@ -32,9 +32,24 @@
             nextImage(false);
         }
 
-        private void MainWindow_KeyPress(object sender, KeyPressEventArgs e)
-        {
 
+        private void Button_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case 'w':
+                    KeepButton_Click(null, null);
+                    break;
+
+                case 's':
+                    TossButton_Click(null, null);
+                    break;
+
+                case 'd':
+                    SkipButton_Click(null, null);
+                    break;
+            }
+            e.Handled = true;
         }
 
         /// <summary>
