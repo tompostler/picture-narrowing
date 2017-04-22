@@ -17,19 +17,19 @@
 
         private void KeepButton_Click(object sender, EventArgs e)
         {
-            image.CopyTo(Path.Combine(new string[] { image.DirectoryName, "keep", image.Name }));
+            manager.RemoveImage(image, true);
             nextImage();
         }
 
         private void TossButton_Click(object sender, EventArgs e)
         {
-            image.CopyTo(Path.Combine(new string[] { image.DirectoryName, "toss", image.Name }));
+            manager.RemoveImage(image, false);
             nextImage();
         }
 
         private void SkipButton_Click(object sender, EventArgs e)
         {
-            nextImage(false);
+            nextImage();
         }
 
 
@@ -67,20 +67,14 @@
         {
             DirectoryInfo directory = new DirectoryInfo(chooseDirectory());
 
-            // Create the necessary subdirectories if not already existing
-            try
-            {
-                directory.CreateSubdirectory("keep");
-            }
-            catch (IOException) { }
-            try
-            {
-                directory.CreateSubdirectory("toss");
-            }
-            catch (IOException) { }
-
             manager = new Manager(directory);
-            nextImage(false);
+            if (manager.Pass == "Done")
+            {
+                Close();
+                return;
+            }
+
+            nextImage();
         }
 
         /// <summary>
@@ -96,15 +90,8 @@
         /// <summary>
         /// Remove the current image from the manager and serve up the next one with updated text.
         /// </summary>
-        /// <param name="removeImage">True to remove the image from the manager, false to keep in the queue.</param>
-        private void nextImage(bool removeImage = true)
+        private void nextImage()
         {
-            if (removeImage)
-            {
-                manager.RemoveImage(image);
-                updateImageLabels();
-            }
-
             // Check for end
             if (manager.ImagesRemaining == 0)
             {
@@ -113,7 +100,7 @@
             else
             {
                 // Show the next image
-                image = manager.RandomImage;
+                image = manager.RandomImage();
                 ImageViewer.Load(image.FullName);
                 updateImageLabels();
             }
@@ -125,7 +112,7 @@
         private void updateImageLabels()
         {
             RemainingImages.Text = $"{manager.ImagesRemaining - 1} Remaining...";
-            Filename.Text = image.Name;
+            Filename.Text = $"{manager.Pass} pass: {image.Name}";
         }
 
         /// <summary>
@@ -136,8 +123,7 @@
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             ImageViewer.Dispose();
-            Thread.Sleep(100); // Make sure the image viewer is disposed.
-            manager.DeleteFiles();
+            Thread.Sleep(250); // Make sure the image viewer is disposed.
         }
     }
 }
