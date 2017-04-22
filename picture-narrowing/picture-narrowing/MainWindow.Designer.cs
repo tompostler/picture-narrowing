@@ -73,7 +73,6 @@
             this.KeepButton.Text = "Keep";
             this.KeepButton.UseVisualStyleBackColor = true;
             this.KeepButton.Click += new System.EventHandler(this.KeepButton_Click);
-            this.KeepButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Button_KeyDown);
             this.KeepButton.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Button_KeyPress);
             // 
             // TossButton
@@ -86,7 +85,6 @@
             this.TossButton.Text = "Toss";
             this.TossButton.UseVisualStyleBackColor = true;
             this.TossButton.Click += new System.EventHandler(this.TossButton_Click);
-            this.TossButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Button_KeyDown);
             this.TossButton.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Button_KeyPress);
             // 
             // SkipButton
@@ -99,7 +97,6 @@
             this.SkipButton.Text = "Skip";
             this.SkipButton.UseVisualStyleBackColor = true;
             this.SkipButton.Click += new System.EventHandler(this.SkipButton_Click);
-            this.SkipButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Button_KeyDown);
             this.SkipButton.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Button_KeyPress);
             // 
             // FolderDialog

@@ -48,22 +48,6 @@
             }
             e.Handled = true;
         }
-        private void Button_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.Up:
-                    KeepButton_Click(null, null);
-                    break;
-                case Keys.Down:
-                    TossButton_Click(null, null);
-                    break;
-                case Keys.Right:
-                    SkipButton_Click(null, null);
-                    break;
-            }
-            e.Handled = true;
-        }
 
         /// <summary>
         /// When the main window is loaded:
@@ -125,7 +109,7 @@
         private void updateImageLabels()
         {
             RemainingImages.Text = $"{manager.ImagesRemaining - 1} Remaining...";
-            Filename.Text = $"{manager.Pass} pass: {image.Name}";
+            Filename.Text = $"{manager.Pass} pass: {image.Name} ({ImageViewer.Image.Width}x{ImageViewer.Image.Height})";
         }
 
         /// <summary>
