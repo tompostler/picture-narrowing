@@ -32,7 +32,6 @@
             nextImage();
         }
 
-
         private void Button_KeyPress(object sender, KeyPressEventArgs e)
         {
             switch (e.KeyChar)
@@ -40,12 +39,26 @@
                 case 'w':
                     KeepButton_Click(null, null);
                     break;
-
                 case 's':
                     TossButton_Click(null, null);
                     break;
-
                 case 'd':
+                    SkipButton_Click(null, null);
+                    break;
+            }
+            e.Handled = true;
+        }
+        private void Button_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    KeepButton_Click(null, null);
+                    break;
+                case Keys.Down:
+                    TossButton_Click(null, null);
+                    break;
+                case Keys.Right:
                     SkipButton_Click(null, null);
                     break;
             }
