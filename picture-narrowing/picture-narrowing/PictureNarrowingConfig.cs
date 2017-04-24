@@ -31,7 +31,7 @@ namespace picture_narrowing
         {
             var output = Path.Combine(this.DirectoryInfo.FullName, Filename);
             var stroutput = JsonConvert.SerializeObject(this, Formatting.Indented);
-            //File.WriteAllText(output, stroutput);
+            File.WriteAllText(output, stroutput);
         }
     }
 }

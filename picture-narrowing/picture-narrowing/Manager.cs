@@ -25,6 +25,8 @@ namespace picture_narrowing
         public string Pass { get; private set; }
         public int ImagesRemaining => Images.Count();
 
+        public static HashSet<string> SupportedHtml5VideoFormats = new HashSet<string> { ".mp4", ".webm" };
+
         public Manager(string directoryPath)
             : this(new DirectoryInfo(directoryPath)) { }
 
@@ -36,7 +38,7 @@ namespace picture_narrowing
             if (!configFile.Exists)
             {
                 this.Images = dirInfo.EnumerateFiles().ToList();
-                //this.trimOutNonimages();
+                this.trimOutNonimages();
 
                 this.Config = new PictureNarrowingConfig(dirInfo);
                 foreach (var info in this.Images)
@@ -111,14 +113,15 @@ namespace picture_narrowing
             {
                 try
                 {
-                    Image.FromFile(info.FullName);
                     bytesSeen += info.Length;
+                    Image.FromFile(info.FullName);
+                    actuallyImages.Add(info);
                 }
                 catch (OutOfMemoryException)
                 {
-                    continue;
+                    if (SupportedHtml5VideoFormats.Contains(info.Extension.ToLower()))
+                        actuallyImages.Add(info);
                 }
-                actuallyImages.Add(info);
 
                 // We're creating a lot of large objects and discarding them quickly
                 // So force a GC.Collect every so often since the garbage collector doesn't keep up

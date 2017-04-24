@@ -38,7 +38,7 @@ namespace picture_narrowing
             this.SkipButton = new System.Windows.Forms.Button();
             this.FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.Filename = new System.Windows.Forms.Label();
-            this.ChromeBrowser = new ChromiumWebBrowser("about:blank");
+            this.ChromeBrowser = new ChromiumWebBrowser(string.Empty);
             this.SuspendLayout();
             // 
             // RemainingImages
@@ -115,6 +115,8 @@ namespace picture_narrowing
             this.ChromeBrowser.Size = new System.Drawing.Size(594, 382);
             this.ChromeBrowser.TabIndex = 0;
             this.ChromeBrowser.TabStop = false;
+            this.ChromeBrowser.BrowserSettings.FileAccessFromFileUrls = CefState.Enabled;
+            this.ChromeBrowser.BrowserSettings.UniversalAccessFromFileUrls = CefState.Enabled;
             // 
             // MainWindow
             // 
@@ -132,8 +134,8 @@ namespace picture_narrowing
             this.Name = "MainWindow";
             this.Text = "Picture Narrowing";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.Resize += MainWindow_Resize;
             this.ResumeLayout(false);
 
         }
