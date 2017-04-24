@@ -98,7 +98,20 @@
             {
                 // Show the next image
                 image = manager.RandomImage();
-                ImageViewer.Load(image.FullName);
+                //ImageViewer.Load(image.FullName);
+                //https://www.microsoft.com/en-in/download/details.aspx?id=40784
+                this.DisplayHtml($@"
+<!DOCTYPE html> 
+<html> 
+<body> 
+
+<video autoplay controls loop src=""file:///{image.FullName}"">
+  Your browser does not support HTML5 video.
+</video>
+
+</body>
+</html>
+");
                 updateImageLabels();
             }
         }
@@ -109,7 +122,7 @@
         private void updateImageLabels()
         {
             RemainingImages.Text = $"{manager.ImagesRemaining - 1} Remaining...";
-            Filename.Text = $"{manager.Pass} pass: {image.Name} ({ImageViewer.Image.Width}x{ImageViewer.Image.Height})";
+            Filename.Text = $"{manager.Pass} pass: {image.Name} ";// ({ImageViewer.Image.Width}x{ImageViewer.Image.Height})";
         }
 
         /// <summary>
@@ -122,5 +135,25 @@
             ImageViewer.Dispose();
             Thread.Sleep(250); // Make sure the image viewer is disposed.
         }
+        
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Cef.Shutdown();
+        }
+
+        //private void DisplayHtml(string html)
+        //{
+        //    webBrowser1.Navigate("about:blank");
+        //    try
+        //    {
+        //        if (webBrowser1.Document != null)
+        //        {
+        //            webBrowser1.Document.Write(string.Empty);
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    { } // do nothing with this
+        //    webBrowser1.DocumentText = html;
+        //}
     }
 }

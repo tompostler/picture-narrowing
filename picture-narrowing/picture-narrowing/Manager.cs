@@ -36,7 +36,7 @@ namespace picture_narrowing
             if (!configFile.Exists)
             {
                 this.Images = dirInfo.EnumerateFiles().ToList();
-                this.trimOutNonimages();
+                //this.trimOutNonimages();
 
                 this.Config = new PictureNarrowingConfig(dirInfo);
                 foreach (var info in this.Images)
