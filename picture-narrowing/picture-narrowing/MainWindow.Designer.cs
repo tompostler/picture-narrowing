@@ -1,4 +1,7 @@
-﻿namespace picture_narrowing
+﻿using CefSharp;
+using CefSharp.WinForms;
+
+namespace picture_narrowing
 {
     partial class MainWindow
     {
@@ -29,29 +32,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.ImageViewer = new System.Windows.Forms.PictureBox();
             this.RemainingImages = new System.Windows.Forms.Label();
             this.KeepButton = new System.Windows.Forms.Button();
             this.TossButton = new System.Windows.Forms.Button();
             this.SkipButton = new System.Windows.Forms.Button();
             this.FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.Filename = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
+            this.ChromeBrowser = new ChromiumWebBrowser(string.Empty);
             this.SuspendLayout();
-            // 
-            // ImageViewer
-            // 
-            this.ImageViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ImageViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ImageViewer.Location = new System.Drawing.Point(15, 15);
-            this.ImageViewer.Margin = new System.Windows.Forms.Padding(0);
-            this.ImageViewer.Name = "ImageViewer";
-            this.ImageViewer.Size = new System.Drawing.Size(594, 382);
-            this.ImageViewer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.ImageViewer.TabIndex = 0;
-            this.ImageViewer.TabStop = false;
             // 
             // RemainingImages
             // 
@@ -115,6 +103,20 @@
             this.Filename.TabIndex = 5;
             this.Filename.Text = "Filename";
             this.Filename.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // ChromeBrowser
+            //
+            this.ChromeBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ChromeBrowser.Location = new System.Drawing.Point(15, 15);
+            this.ChromeBrowser.Margin = new System.Windows.Forms.Padding(0);
+            this.ChromeBrowser.Name = "ChromeBrowser";
+            this.ChromeBrowser.Size = new System.Drawing.Size(594, 382);
+            this.ChromeBrowser.TabIndex = 0;
+            this.ChromeBrowser.TabStop = false;
+            this.ChromeBrowser.BrowserSettings.FileAccessFromFileUrls = CefState.Enabled;
+            this.ChromeBrowser.BrowserSettings.UniversalAccessFromFileUrls = CefState.Enabled;
             // 
             // MainWindow
             // 
@@ -126,27 +128,26 @@
             this.Controls.Add(this.TossButton);
             this.Controls.Add(this.KeepButton);
             this.Controls.Add(this.RemainingImages);
-            this.Controls.Add(this.ImageViewer);
+            this.Controls.Add(this.ChromeBrowser);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "MainWindow";
             this.Text = "Picture Narrowing";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Load += new System.EventHandler(this.MainWindow_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).EndInit();
+            this.Resize += MainWindow_Resize;
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox ImageViewer;
         private System.Windows.Forms.Label RemainingImages;
         private System.Windows.Forms.Button KeepButton;
         private System.Windows.Forms.Button TossButton;
         private System.Windows.Forms.Button SkipButton;
         private System.Windows.Forms.FolderBrowserDialog FolderDialog;
         private System.Windows.Forms.Label Filename;
+        private ChromiumWebBrowser ChromeBrowser;
     }
 }
 

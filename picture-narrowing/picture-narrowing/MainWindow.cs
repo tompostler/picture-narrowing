@@ -1,5 +1,6 @@
 ﻿namespace picture_narrowing
 {
+    using CefSharp;
     using System;
     using System.IO;
     using System.Threading;
@@ -98,7 +99,10 @@
             {
                 // Show the next image
                 image = manager.RandomImage();
-                ImageViewer.Load(image.FullName);
+                if (Manager.SupportedHtml5VideoFormats.Contains(image.Extension))
+                    this.updateBrowserVideo();
+                else
+                    ChromeBrowser.Load($"file:///{image.FullName}");
                 updateImageLabels();
             }
         }
@@ -109,18 +113,33 @@
         private void updateImageLabels()
         {
             RemainingImages.Text = $"{manager.ImagesRemaining - 1} Remaining...";
-            Filename.Text = $"{manager.Pass} pass: {image.Name} ({ImageViewer.Image.Width}x{ImageViewer.Image.Height})";
+            Filename.Text = $"{manager.Pass} pass: {image.Name}";
         }
 
         /// <summary>
-        /// After the form has closed, delete all the files that are scheduled for deletion.
+        /// Resizes the HTML5 video content (when applicable)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
+        private void updateBrowserVideo()
         {
-            ImageViewer.Dispose();
-            Thread.Sleep(250); // Make sure the image viewer is disposed.
+            if (Manager.SupportedHtml5VideoFormats.Contains(image.Extension))
+                ChromeBrowser.LoadHtml($@"
+<!DOCTYPE html><html><body>
+
+<video width=""{ChromeBrowser.Width - 25}"" height=""{ChromeBrowser.Height - 25}"" autoplay controls loop src=""file:///{image.FullName}"">
+    Your browser does not support HTML5 video.
+</video>
+
+</body></html>", $"file:///{image.Directory.FullName}");
+        }
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Cef.Shutdown();
+        }
+
+        private void MainWindow_Resize(object sender, System.EventArgs e)
+        {
+            this.updateBrowserVideo();
         }
     }
 }
