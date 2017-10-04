@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace picture_narrowing
 {
@@ -104,33 +106,38 @@ namespace picture_narrowing
         /// </summary>
         private void trimOutNonimages()
         {
-            // 25 MB
-            const long bytesBeforeCollecting = 25 * 1000 * 1000;
+            // 100 MB
+            const long bytesBeforeCollecting = 100 * 1000 * 1000;
             long bytesSeen = 0;
 
             List<FileInfo> actuallyImages = new List<FileInfo>();
-            foreach (var info in this.Images)
+            var actuallyImagesLock = new object();
+            var gcLock = new object();
+            Parallel.ForEach(this.Images, info =>
             {
                 try
                 {
-                    bytesSeen += info.Length;
+                    Interlocked.Add(ref bytesSeen, info.Length);
                     Image.FromFile(info.FullName);
-                    actuallyImages.Add(info);
+                    lock (actuallyImagesLock)
+                        actuallyImages.Add(info);
                 }
                 catch (OutOfMemoryException)
                 {
                     if (SupportedHtml5VideoFormats.Contains(info.Extension.ToLower()))
-                        actuallyImages.Add(info);
+                        lock (actuallyImagesLock)
+                            actuallyImages.Add(info);
                 }
 
                 // We're creating a lot of large objects and discarding them quickly
                 // So force a GC.Collect every so often since the garbage collector doesn't keep up
-                if (bytesSeen > bytesBeforeCollecting)
-                {
-                    GC.Collect();
-                    bytesSeen = 0;
-                }
-            }
+                lock (gcLock)
+                    if (bytesSeen > bytesBeforeCollecting)
+                    {
+                        GC.Collect();
+                        Interlocked.Exchange(ref bytesSeen, 0);
+                    }
+            });
             this.Images = actuallyImages;
 
             // And once more, this time with feeling.
