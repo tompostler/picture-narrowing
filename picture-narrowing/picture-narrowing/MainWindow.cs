@@ -2,6 +2,7 @@
 {
     using CefSharp;
     using System;
+    using System.Drawing;
     using System.IO;
     using System.Threading;
     using System.Windows.Forms;
@@ -88,7 +89,7 @@
         /// <summary>
         /// Remove the current image from the manager and serve up the next one with updated text.
         /// </summary>
-        private void nextImage()
+        private void nextImage(bool actuallyProgressForward = true)
         {
             // Check for end
             if (manager.ImagesRemaining == 0)
@@ -98,22 +99,33 @@
             else
             {
                 // Show the next image
-                image = manager.RandomImage();
+                if (actuallyProgressForward)
+                    image = manager.RandomImage();
                 if (Manager.SupportedHtml5VideoFormats.Contains(image.Extension))
                     this.updateBrowserVideo();
                 else
+                {
                     ChromeBrowser.Load($"file:///{image.FullName}");
-                updateImageLabels();
+                    updateImageLabels(true);
+                }
             }
         }
 
         /// <summary>
         /// Updates the remaining images text and current filename text.
         /// </summary>
-        private void updateImageLabels()
+        private void updateImageLabels(bool isImage = false)
         {
             RemainingImages.Text = $"{manager.ImagesRemaining - 1} Remaining...";
-            Filename.Text = $"{manager.Pass} pass: {image.Name}";
+
+            if (!isImage)
+                Filename.Text = $"{manager.Pass} pass: {image.Name}";
+            else
+            {
+                var img = Image.FromFile(image.FullName);
+                Filename.Text = $"{manager.Pass} pass: {image.Name} ({img.Width}x{img.Height})";
+                img.Dispose();
+            }
         }
 
         /// <summary>
@@ -130,6 +142,7 @@
 </video>
 
 </body></html>", $"file:///{image.Directory.FullName}");
+            this.updateImageLabels();
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -139,7 +152,7 @@
 
         private void MainWindow_Resize(object sender, System.EventArgs e)
         {
-            this.updateBrowserVideo();
+            this.nextImage(actuallyProgressForward: false);
         }
     }
 }
