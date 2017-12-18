@@ -55,6 +55,17 @@ namespace picture_narrowing
                 // Add any image files that aren't already part of the config
                 // Yes this does mean that we will revalidate every file that's not in the list, but that should be mostly okay
                 var files = dirInfo.EnumerateFiles().ToList();
+
+                // Remove any that are no longer there
+                var fileNames = new HashSet<string>(files.Select(_ => _.Name));
+                var gone = new List<string>();
+                foreach (var fileName in this.Config.Files.Keys)
+                    if (!fileNames.Contains(fileName))
+                        gone.Add(fileName);
+                foreach (var fileName in gone)
+                    this.Config.Files.Remove(fileName);
+
+                // Add any not there
                 var toCheck = new List<FileInfo>();
                 foreach (var file in files)
                     if (!this.Config.Files.ContainsKey(file.Name))
