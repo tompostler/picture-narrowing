@@ -4,7 +4,6 @@
     using System;
     using System.Drawing;
     using System.IO;
-    using System.Threading;
     using System.Windows.Forms;
 
     public partial class MainWindow : Form

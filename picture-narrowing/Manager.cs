@@ -51,6 +51,19 @@ namespace picture_narrowing
             {
                 this.Config = new PictureNarrowingConfig(dirInfo);
                 this.Config.Load();
+
+                // Add any image files that aren't already part of the config
+                // Yes this does mean that we will revalidate every file that's not in the list, but that should be mostly okay
+                var files = dirInfo.EnumerateFiles().ToList();
+                var toCheck = new List<FileInfo>();
+                foreach (var file in files)
+                    if (!this.Config.Files.ContainsKey(file.Name))
+                        toCheck.Add(file);
+                this.Images = toCheck;
+                this.trimOutNonimages();
+                foreach (var image in this.Images)
+                    this.Config.Files.Add(image.Name, new List<bool>());
+                this.Config.Save();
             }
 
             if (this.Config.Files.Any(kvp => kvp.Value.Count == 0))
