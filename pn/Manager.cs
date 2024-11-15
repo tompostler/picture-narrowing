@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace picture_narrowing
+﻿namespace pn
 {
     /// <summary>
     /// Instead of actually moving the files everywhere, just keep track of the ones to move until the third round.

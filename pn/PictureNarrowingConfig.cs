@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
 
-namespace picture_narrowing
+namespace pn
 {
     internal sealed class PictureNarrowingConfig
     {

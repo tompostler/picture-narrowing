@@ -1,11 +1,7 @@
-﻿namespace picture_narrowing
-{
-    using CefSharp;
-    using System;
-    using System.Drawing;
-    using System.IO;
-    using System.Windows.Forms;
+﻿using CefSharp;
 
+namespace pn
+{
     public partial class MainWindow : Form
     {
         private Manager manager;
@@ -59,8 +55,6 @@
         /// This is all done syncronously and expensively.
         /// TODO: Refactor to be less stupid.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MainWindow_Load(object sender, EventArgs e)
         {
             DirectoryInfo directory = new DirectoryInfo(chooseDirectory());
@@ -147,11 +141,6 @@
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             Cef.Shutdown();
-        }
-
-        private void MainWindow_Resize(object sender, System.EventArgs e)
-        {
-            this.nextImage(actuallyProgressForward: false);
         }
     }
 }
