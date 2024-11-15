@@ -9,38 +9,35 @@ namespace pn
 
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void KeepButton_Click(object sender, EventArgs e)
         {
-            manager.RemoveImage(image, true);
-            nextImage();
+            this.manager.RemoveImage(this.image, true);
+            this.nextImage();
         }
 
         private void TossButton_Click(object sender, EventArgs e)
         {
-            manager.RemoveImage(image, false);
-            nextImage();
+            this.manager.RemoveImage(this.image, false);
+            this.nextImage();
         }
 
-        private void SkipButton_Click(object sender, EventArgs e)
-        {
-            nextImage();
-        }
+        private void SkipButton_Click(object sender, EventArgs e) => this.nextImage();
 
         private void Button_KeyPress(object sender, KeyPressEventArgs e)
         {
             switch (e.KeyChar)
             {
                 case 'w':
-                    KeepButton_Click(null, null);
+                    this.KeepButton_Click(null, null);
                     break;
                 case 's':
-                    TossButton_Click(null, null);
+                    this.TossButton_Click(null, null);
                     break;
                 case 'd':
-                    SkipButton_Click(null, null);
+                    this.SkipButton_Click(null, null);
                     break;
             }
             e.Handled = true;
@@ -57,16 +54,16 @@ namespace pn
         /// </summary>
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            DirectoryInfo directory = new DirectoryInfo(chooseDirectory());
+            var directory = new DirectoryInfo(this.chooseDirectory());
 
-            manager = new Manager(directory);
-            if (manager.Pass == "Done")
+            this.manager = new Manager(directory);
+            if (this.manager.Pass == "Done")
             {
-                Close();
+                this.Close();
                 return;
             }
 
-            nextImage();
+            this.nextImage();
         }
 
         /// <summary>
@@ -75,8 +72,12 @@ namespace pn
         /// <returns>Directory path.</returns>
         private string chooseDirectory()
         {
-            while (FolderDialog.ShowDialog() != DialogResult.OK) ;
-            return FolderDialog.SelectedPath;
+            while (this.FolderDialog.ShowDialog() != DialogResult.OK)
+            {
+                ;
+            }
+
+            return this.FolderDialog.SelectedPath;
         }
 
         /// <summary>
@@ -85,21 +86,26 @@ namespace pn
         private void nextImage(bool actuallyProgressForward = true)
         {
             // Check for end
-            if (manager.ImagesRemaining == 0)
+            if (this.manager.ImagesRemaining == 0)
             {
-                Close();
+                this.Close();
             }
             else
             {
                 // Show the next image
                 if (actuallyProgressForward)
-                    image = manager.RandomImage();
-                if (Manager.SupportedHtml5VideoFormats.Contains(image.Extension))
+                {
+                    this.image = this.manager.RandomImage();
+                }
+
+                if (Manager.SupportedHtml5VideoFormats.Contains(this.image.Extension))
+                {
                     this.updateBrowserVideo();
+                }
                 else
                 {
-                    ChromeBrowser.Load($"file:///{image.FullName}");
-                    updateImageLabels(true);
+                    this.ChromeBrowser.Load($"file:///{this.image.FullName}");
+                    this.updateImageLabels(true);
                 }
             }
         }
@@ -109,14 +115,16 @@ namespace pn
         /// </summary>
         private void updateImageLabels(bool isImage = false)
         {
-            RemainingImages.Text = $"{manager.ImagesRemaining - 1} Remaining...";
+            this.RemainingImages.Text = $"{this.manager.ImagesRemaining - 1} Remaining...";
 
             if (!isImage)
-                Filename.Text = $"{manager.Pass} pass: {image.Name}";
+            {
+                this.Filename.Text = $"{this.manager.Pass} pass: {this.image.Name}";
+            }
             else
             {
-                var img = Image.FromFile(image.FullName);
-                Filename.Text = $"{manager.Pass} pass: {image.Name} ({img.Width}x{img.Height})";
+                var img = Image.FromFile(this.image.FullName);
+                this.Filename.Text = $"{this.manager.Pass} pass: {this.image.Name} ({img.Width}x{img.Height})";
                 img.Dispose();
             }
         }
@@ -126,21 +134,21 @@ namespace pn
         /// </summary>
         private void updateBrowserVideo()
         {
-            if (Manager.SupportedHtml5VideoFormats.Contains(image.Extension))
-                ChromeBrowser.LoadHtml($@"
+            if (Manager.SupportedHtml5VideoFormats.Contains(this.image.Extension))
+            {
+                _ = this.ChromeBrowser.LoadHtml($@"
 <!DOCTYPE html><html><body>
 
-<video width=""{ChromeBrowser.Width - 25}"" height=""{ChromeBrowser.Height - 25}"" autoplay controls loop src=""file:///{image.FullName}"">
+<video width=""{this.ChromeBrowser.Width - 25}"" height=""{this.ChromeBrowser.Height - 25}"" autoplay controls loop src=""file:///{this.image.FullName}"">
     Your browser does not support HTML5 video.
 </video>
 
-</body></html>", $"file:///{image.Directory.FullName}");
+</body></html>", $"file:///{this.image.Directory.FullName}");
+            }
+
             this.updateImageLabels();
         }
 
-        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Cef.Shutdown();
-        }
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e) => Cef.Shutdown();
     }
 }

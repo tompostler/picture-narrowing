@@ -10,7 +10,7 @@ namespace pn
         public DirectoryInfo DirectoryInfo { get; set; }
 
         public Dictionary<string, List<bool>> Files { get; set; }
-            = new Dictionary<string, List<bool>>();
+            = [];
 
         public PictureNarrowingConfig() { }
 
@@ -27,8 +27,8 @@ namespace pn
 
         public void Save()
         {
-            var output = Path.Combine(this.DirectoryInfo.FullName, Filename);
-            var stroutput = JsonConvert.SerializeObject(this, Formatting.Indented);
+            string output = Path.Combine(this.DirectoryInfo.FullName, Filename);
+            string stroutput = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(output, stroutput);
         }
     }
